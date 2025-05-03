@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WhatsApp Add Account</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111b21;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      justify-content: center;
+      position: relative;
+      text-align: center;
+    }
+
+    .back-arrow {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .circle-img {
+      background: url('images/Screenshot_of_WhatsApp-removebg-preview.png') no-repeat center;
+      background-size: contain;
+      width: 250px;
+      height: 250px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin: 0 0 10px;
+      font-weight: bold;
+    }
+
+    p {
+      max-width: 320px;
+      line-height: 1.5;
+      font-size: 14px;
+      color: #d1d1d1;
+    }
+
+    .highlight {
+      color: #53bdeb;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 14px 0;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      background-color: #25D366;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    .btn:hover {
+      background-color: #1ebe5d;
+    }
+  </style>
+</head>
+<body>
+
+
+
+<div class="circle-img"></div>
+
+<h2>Welcome to WhatsApp</h2>
+
+<p>
+  Read our <span class="highlight"  onclick="window.location.href='https://www.whatsapp.com/legal/privacy-policy'">Privacy Policy</span>. Tap
+  “Agree and continue” to accept the
+  <span class="highlight" onclick="window.location.href='https://www.whatsapp.com/legal/terms-of-service\n'">Terms of Service</span>.
+</p>
+
+<!-- Use a real button for accessibility and function -->
+<button class="btn" onclick="window.location.href='ws2.html'">Agree and continue</button>
+
+</body>
+</html>
+

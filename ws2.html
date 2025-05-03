@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter Phone Number</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111b21;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    p {
+      color: #bcbcbc;
+      font-size: 14px;
+      text-align: center;
+      margin: 0 30px 20px;
+    }
+
+    .highlight {
+      color: #53bdeb;
+      cursor: pointer;
+    }
+
+    .dropdown, .input-row {
+      width: 80%;
+      max-width: 350px;
+      margin: 10px 0;
+    }
+
+    select, input {
+      width: 100%;
+      background-color: transparent;
+      border: none;
+      border-bottom: 2px solid #25D366;
+      padding: 10px 5px;
+      font-size: 16px;
+      color: white;
+      outline: none;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-row input:first-child {
+      width: 70px;
+      flex-shrink: 0;
+    }
+
+    .submit-btn {
+      position: absolute;
+      bottom: 30px;
+      width: 80%;
+      max-width: 300px;
+      background-color: #25D366;
+      color: black;
+      padding: 14px 0;
+      text-align: center;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .submit-btn:hover {
+      background-color: #1ebe5d;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Enter your phone number</h2>
+<p>
+  WhatsApp will need to verify your phone number. <br>
+  Carrier charges may apply. <span class="highlight">What’s my number?</span>
+</p>
+
+<div class="dropdown">
+  <select id="country">
+    <option value="+94">Sri Lanka</option>
+    <option value="+91">India</option>
+    <option value="+1">USA</option>
+    <option value="+44">UK</option>
+    <!-- Add more countries as needed -->
+  </select>
+</div>
+
+<div class="input-row">
+  <input type="text" id="dial-code" value="+94" readonly>
+  <input type="tel" id="phone-number" placeholder="Phone number" required>
+</div>
+
+<button class="submit-btn" onclick="handleNext()">Next</button>
+
+<script>
+  // Update dial code when country is selected
+  const countrySelect = document.getElementById('country');
+  const dialCodeInput = document.getElementById('dial-code');
+
+  countrySelect.addEventListener('change', () => {
+    dialCodeInput.value = countrySelect.value;
+  });
+
+  function handleNext() {
+    const phone = document.getElementById('phone-number').value.trim();
+    const dial = document.getElementById('dial-code').value;
+
+    if (!phone.match(/^[0-9]{7,15}$/)) {
+      alert("Please enter a valid phone number.");
+      return;
+    }
+
+    const fullNumber = dial + phone;
+    localStorage.setItem('phone_number', fullNumber); // optional use in next page
+    window.location.href = "otp_verification1.html";
+  }
+</script>
+
+</body>
+</html>

